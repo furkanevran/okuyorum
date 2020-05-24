@@ -1,11 +1,12 @@
-import {BooksRepository} from './books';
-//import {ProductsRepository} from './products';
+import { BooksRepository } from './books';
+import { UserRepository } from './users';
 
-// Database Interface Extensions:
 export interface IExtensions {
     books: BooksRepository,
+    users: UserRepository
 }
 
 export {
     BooksRepository,
+    UserRepository
 };

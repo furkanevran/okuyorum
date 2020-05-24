@@ -1,8 +1,8 @@
-import * as promise from 'bluebird'; // best promise library today
-import * as dbConfig from './db-config'; // db connection details
-import pgPromise from 'pg-promise'; // pg-promise core library
+import * as promise from 'bluebird';
+import * as dbConfig from './db-config';
+import pgPromise from 'pg-promise';
 import {IInitOptions, IDatabase, IMain} from 'pg-promise';
-import {IExtensions, BooksRepository} from './repos';
+import {IExtensions, BooksRepository, UserRepository} from './repos';
 
 type ExtendedProtocol = IDatabase<IExtensions> & IExtensions;
 
@@ -12,9 +12,8 @@ const initOptions: IInitOptions<IExtensions> = {
 
     extend(obj: ExtendedProtocol, dc: any) {
         obj.books = new BooksRepository(obj, pgp);
+        obj.users = new UserRepository(obj, pgp);
     }
-
-    
 };
 
 const pgp: IMain = pgPromise(initOptions);

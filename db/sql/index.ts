@@ -5,8 +5,14 @@ const { serverRuntimeConfig } = getConfig()
 const path = require('path');
 
 export const books = {
-    find: sql('books/find.sql'),
+    findById: sql('books/findById.sql'),
+    findByName: sql('books/findByName.sql'),
     page: sql('books/page.sql')
+};
+
+export const users = {
+    create: sql('users/create.sql'),
+    findByEmail: sql('users/findByEmail.sql')
 };
 
 function sql(file: string): QueryFile {

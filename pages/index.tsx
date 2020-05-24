@@ -24,7 +24,7 @@ const Home = ({books}: BookProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const books = await db.books.getPage({itemCount: 20, page: 1})
-
+  
   return {
     props: {
       books
