@@ -1,6 +1,7 @@
-import {withAuth} from '../auth/withAuth'
 import { db } from '../db'
 import Book from '../db/models/book';
+import {withAuth} from '../auth/withAuth'
+import { withAuthSync } from '../auth/withAuthSync';
 
 type ProptectedProps = {
     a: boolean
@@ -36,4 +37,4 @@ export const getServerSideProps = withAuth(async (ctx, user) => {
     }
 });
 
-export default protectedPage
+export default withAuthSync(protectedPage)

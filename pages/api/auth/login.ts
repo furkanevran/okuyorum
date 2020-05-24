@@ -4,6 +4,12 @@ import { compare } from  'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { serialize } from 'cookie'
 
+const error = (res: NextApiResponse) => {
+    let message = "Wrong e-mail or password.";
+    let code = 400;
+    res.status(code).json({message});
+}
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if(req.method !== "POST") {
         res.status(405).end();
@@ -17,14 +23,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
        const post = await db.users.findByEmail(<string>email)
        if(!post) {
-        console.log(pw)
-           console.log(req.body)
-           throw Error("E-Mail not found")
+        error(res)
+        return
        }
         const isPasswordRight = await compare(pw, post.password_hash)
 
         if(!isPasswordRight) {
-        throw Error("Password is not right")
+            error(res)
+            return
         }
         const claims = {
             id: post.id,
@@ -42,16 +48,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             })
 
         res.setHeader('Set-Cookie', authCookie)
-        res.status(200).json({'message': 'ya mate get in', 'jwt': jwt}); 
+        res.status(200).json({'message': 'You are now authenticated.'}); 
         return
-           
-
-       throw new Error();
     } catch (e) {
-       console.error(e);
-       let message = "Wrong e-mail or password.";
-       let code = 400;
-       res.status(code).json({message});
+        error(res)
+        return
     }
  };
   

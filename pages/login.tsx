@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import fetch from 'isomorphic-unfetch'
+import { logout } from '../auth/logout';
 
 export default function Login() {
     const setCookie = () => {
@@ -14,18 +15,12 @@ export default function Login() {
         })
     }
 
-    const logOut = () => {
-        fetch('/api/auth/logout').then(r => r.json).then(x => {
-            console.log(x)
-        })
-    }
-
     return (<>
     <Link href='/protected' as={`/protected`}>
         <a>PROTECTED</a>
     </Link>
 
     <a onClick={() => setCookie()}>set cookie</a>
-    <a onClick={() => logOut()}>log out</a>
+    <a onClick={() => logout()}>log out</a>
     </>)
 }
