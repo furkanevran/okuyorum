@@ -32,6 +32,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             error(res)
             return
         }
+        
         const claims = {
             id: post.id,
             email: post.email,
@@ -45,7 +46,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             maxAge: 72576000,
             httpOnly: true,
             path: '/',
-            })
+        })
 
         res.setHeader('Set-Cookie', authCookie)
         res.status(200).json({'message': 'You are now authenticated.'}); 

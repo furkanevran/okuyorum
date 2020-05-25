@@ -1,7 +1,8 @@
 import Router from "next/router"
 
-export const logout = async () => {
-    await fetch('/api/auth/logout')
+export const logout = async (redirect = true) => {
+    const ret = await fetch('/api/auth/logout')
     window.localStorage.setItem('logout', Date.now()+'')
-    Router.push('/login')
+    if(redirect === true) Router.push('/login')
+    return ret
 }

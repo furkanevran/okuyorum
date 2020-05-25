@@ -25,6 +25,8 @@ function protectedPage({a, books, user, query}: ProptectedProps) {
 }
 
 export const getServerSideProps = withAuth(async (ctx, user) => {
+    if (!user) return {props:{}}
+
     const query = 'EV'
     const search = await db.books.findByName(query);
     return {
