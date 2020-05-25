@@ -2,17 +2,19 @@ import { db } from '../db'
 import Book from '../db/models/book';
 import {withAuth} from '../auth/withAuth'
 import { withAuthSync } from '../auth/withAuthSync';
+import Link from 'next/link';
 
-type ProptectedProps = {
+type ProtectedProps = {
     a: boolean
     books: Book[]
     user: any,
     query: string
   }
 
-function protectedPage({a, books, user, query}: ProptectedProps) {
+function protectedPage({a, books, user, query}: ProtectedProps) {
     return (
     <>
+      <Link href='/' ><a>index</a></Link>
         <h1>A: {a+''}</h1>
         <h1>Hello {user.username}</h1>
         <hr/>

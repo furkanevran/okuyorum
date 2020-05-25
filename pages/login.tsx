@@ -1,13 +1,10 @@
 import Link from 'next/link'
-import { logout } from '../auth/logout';
-import { withAuth } from '../auth/withAuth';
 import { useEffect } from 'react';
-import { login } from '../auth/login';
 import { useRouter } from 'next/router'
-import { AuthHelper } from '../utils/AuthHelper';
 
-export default function Login({data}, query) {
-    const [isLoggedIn, setIsLoggedIn, RenderWithAuth] = AuthHelper(data.props.isLoggedIn)
+export default function Login({auth}, query) {
+    const {isLoggedIn, RenderWithAuth, Logout, Login} = auth
+
     const router = useRouter()
 
     useEffect(() => {
@@ -20,19 +17,6 @@ export default function Login({data}, query) {
         }
     })
 
-    const setCookie = async () => {
-        const ret = await login('test123@test.com', '123456')
-        if(ret.status === 200) {
-            setIsLoggedIn(true)
-        }
-    }
-
-    const signOut = async () => {
-        const ret = await logout()
-        if(ret.status === 200) {
-            setIsLoggedIn(false)
-        }
-    }
 
     return (<>
     <div>
@@ -41,9 +25,9 @@ export default function Login({data}, query) {
         </Link>
     </div>
     
-    <div><a onClick={() => setCookie()}>set cookie</a></div>
+    <div><a onClick={() => Login('test123@test.com', '123456')}>set cookie</a></div>
     
-    <div><a onClick={() => signOut()}>log out</a></div>
+    <div><a onClick={() => Logout(false)}>log out</a></div>
 
     <RenderWithAuth>
         <div>
@@ -57,12 +41,3 @@ export default function Login({data}, query) {
     </RenderWithAuth>
     </>)
 }
-
-export const getServerSideProps = withAuth(async (ctx, user) => {
-
-    return {
-        props: {
-            isLoggedIn: !!user
-        }
-    }
-})

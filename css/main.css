@@ -1,0 +1,130 @@
+html {
+    overflow-x: hidden;
+}
+
+body {
+    max-width: 650px !important;
+    margin: 0 auto !important;
+    font-family: 'Open Sans' !important;
+    color: #fff !important;
+    background-color: #000 !important;
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.okuyorum {
+    transition: background-color 0.185s ease-in-out;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.okuyorum p,.okuyorum  span,.okuyorum div,.okuyorum  h1,.okuyorum  h2,.okuyorum  h3,.okuyorum  h4,.okuyorum  h5,.okuyorum  h6,.okuyorum  article {
+    font-family: 'Open Sans' !important;
+    color: #fff !important;
+}
+
+.okuyorum:hover {
+    background-color: #080808;
+}
+
+button {
+    background-color: #333;
+    color: #fff;
+    border: 0;
+    outline: 0;
+    box-shadow: 0;
+    width: 100%;
+    padding: 20px 50px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    cursor: pointer;
+}
+
+.loader {
+    font-size: 48px;
+    height: 48px;
+    text-align: center;
+    position: absolute;
+    top: 0; right: 0; left: 0; bottom: 0;
+    margin: auto;
+}
+
+h1 {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+h2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+h3 {
+    font-size: 48px;
+}
+
+h3 > span {
+    color: #999;
+}
+
+.book {
+    box-sizing: border-box;
+    width: 45%;
+    display: inline-block !important;
+    margin-bottom: 25px;
+}
+
+
+.book img {
+    width: 90%;
+    display: block;
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+}
+
+.header {
+    cursor:pointer;
+}
+
+.navigation {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.navigation a {
+    width: 20%;
+    display: inline-block !important;
+    background-color: #222;
+    margin-right: 10px;
+    padding: 10px 0;
+}
+
+.quote {
+    position: relative;
+    margin-top: 70px;
+    width: 100%;
+}
+
+.quote p,.quote  span,.quote div,.quote  h1,.quote  h2,.quote  h3,.quote  h4,.quote  h5,.quote  h6,.quote  article {
+    position: relative;
+    z-index: 1;
+}
+
+.quote:after {
+    z-index: 0;
+    content: '';
+    position: absolute;
+    left: -40vw;
+    top: 0;
+    bottom: 0;
+    width: 180vw;
+    background-color: #333;
+    height: calc(100% + 100px);
+    top: -50px;
+}

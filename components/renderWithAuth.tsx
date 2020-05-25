@@ -11,6 +11,7 @@ function RenderWithAuth ({isLoggedIn, children, invert = false, update}: RenderW
     const [auth, setAuth] = useState(isLoggedIn !== invert)
 
     const syncAuth = (event) => {
+        
         if (event.key === 'logout') {
             update(false)
         }
@@ -27,7 +28,6 @@ function RenderWithAuth ({isLoggedIn, children, invert = false, update}: RenderW
       }
   
       useEffect(() => {
-        window.removeEventListener('storage', syncAuth)
         window.addEventListener('storage', syncAuth)
         setAuth(isLoggedIn !== invert)
         return () => {
