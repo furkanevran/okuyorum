@@ -1,6 +1,7 @@
 import { db } from '../db'
 import Book from '../db/models/book';
 import Link from 'next/link';
+import { withAuth } from '../auth/withAuth';
 
 type BookProps = {
   _isLoggedIn: boolean

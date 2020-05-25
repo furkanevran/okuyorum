@@ -1,15 +1,14 @@
 import { verify } from 'jsonwebtoken'
 import { parse } from 'cookie'
 
-export function withAuth(getServerSidePropsFunc?: Function){
+export function withAuth(getServerSidePropsFunc: Function){
     return async (context: any) => {
         const user = await getUser(context);
-
-        if(getServerSidePropsFunc) {
-            return {props: {user, data: await getServerSidePropsFunc(context, user)}};
+        if(user && getServerSidePropsFunc) {
+            return await getServerSidePropsFunc(context, user);
         }
         
-        return {props: {user, data: {props: {user}}}};
+        return {props: {}};
     }
 }
 

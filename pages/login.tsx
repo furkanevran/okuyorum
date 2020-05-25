@@ -41,3 +41,4 @@ export default function Login({auth}, query) {
     </RenderWithAuth>
     </>)
 }
+
