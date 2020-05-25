@@ -9,5 +9,7 @@ export const login = async (email, password) => {
         },
     })
 
+    if(ret.status === 200) window.localStorage.setItem('login', Date.now()+'')
+
     return ret
 }

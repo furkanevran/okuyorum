@@ -24,6 +24,7 @@ export default function Login({data}) {
         }
     }
 
+    const RenderWithAuthP = ({children, invert = false}) => (<RenderWithAuth isLoggedIn={isLoggedIn} update={setIsLoggedIn} invert={invert}>{children}</RenderWithAuth>)
     return (<>
     <div>
         <Link href='/protected' as={`/protected`}>
@@ -35,7 +36,16 @@ export default function Login({data}) {
     
     <div><a onClick={() => signOut()}>log out</a></div>
 
-    {isLoggedIn === true ? (<RenderWithAuth></RenderWithAuth>) : null}
+    <RenderWithAuthP>
+        <div>
+            <h1>You are logged in!</h1>
+        </div>
+    </RenderWithAuthP>
+    <RenderWithAuthP invert>
+        <div>
+            <span>You not logged in.</span>
+        </div>
+    </RenderWithAuthP>
     </>)
 }
 

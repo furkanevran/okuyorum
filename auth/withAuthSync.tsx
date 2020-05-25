@@ -28,7 +28,6 @@ export function withAuthSync(Component: any, redirect=true){
                 } else {
                     return (null)
                 }
-              
             }
           }
       
@@ -37,7 +36,6 @@ export function withAuthSync(Component: any, redirect=true){
       
             return () => {
               window.removeEventListener('storage', syncLogout)
-              window.localStorage.removeItem('logout')
             }
           }, [])
 
