@@ -1,15 +1,25 @@
 import Link from 'next/link'
-import fetch from 'isomorphic-unfetch'
 import { logout } from '../auth/logout';
-import { GetServerSideProps } from 'next';
 import { withAuth } from '../auth/withAuth';
-import RenderWithAuth from '../components/renderWithAuth';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { login } from '../auth/login';
+import { useRouter } from 'next/router'
+import { AuthHelper } from '../utils/AuthHelper';
 
-export default function Login({data}) {
-    const [isLoggedIn, setIsLoggedIn ] = useState(data.props.isLoggedIn)
-    
+export default function Login({data}, query) {
+    const [isLoggedIn, setIsLoggedIn, RenderWithAuth] = AuthHelper(data.props.isLoggedIn)
+    const router = useRouter()
+
+    useEffect(() => {
+        if(isLoggedIn) {
+            if (router.query.return) {
+                router.push(router.query.return+'')
+            } else {
+               router.push('/')
+            }
+        }
+    })
+
     const setCookie = async () => {
         const ret = await login('test123@test.com', '123456')
         if(ret.status === 200) {
@@ -24,7 +34,6 @@ export default function Login({data}) {
         }
     }
 
-    const RenderWithAuthP = ({children, invert = false}) => (<RenderWithAuth isLoggedIn={isLoggedIn} update={setIsLoggedIn} invert={invert}>{children}</RenderWithAuth>)
     return (<>
     <div>
         <Link href='/protected' as={`/protected`}>
@@ -36,16 +45,16 @@ export default function Login({data}) {
     
     <div><a onClick={() => signOut()}>log out</a></div>
 
-    <RenderWithAuthP>
+    <RenderWithAuth>
         <div>
             <h1>You are logged in!</h1>
         </div>
-    </RenderWithAuthP>
-    <RenderWithAuthP invert>
+    </RenderWithAuth>
+    <RenderWithAuth invert>
         <div>
             <span>You not logged in.</span>
         </div>
-    </RenderWithAuthP>
+    </RenderWithAuth>
     </>)
 }
 

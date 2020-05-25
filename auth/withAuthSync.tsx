@@ -14,7 +14,10 @@ export function withAuthSync(Component: any, redirect=true){
         if(!user) {
             if (redirect === true) {
                 useEffect(() => {
-                    router.push('/login', '/login')
+                    router.push({
+                        pathname: '/login',
+                        query: { return: window.location.pathname },
+                    })
                 }, [])
             }
 
