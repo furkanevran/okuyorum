@@ -4,7 +4,7 @@ import { parse } from 'cookie'
 export function withAuth(getServerSidePropsFunc: Function){
     return async (context: any) => {
         const user = await getUser(context);
-        if(user && getServerSidePropsFunc) {
+        if(getServerSidePropsFunc) {
             return await getServerSidePropsFunc(context, user);
         }
         

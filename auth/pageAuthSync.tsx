@@ -6,30 +6,14 @@ export function pageAuthSync(Component: any){
 
         const router = useRouter()
 
-        if(!pageProps.auth.isLoggedIn) {
-            useEffect(() => {
+        useEffect(() => {
+            if (pageProps.auth.isLoggedIn === false) {
                 router.push({
                     pathname: '/login',
                     query: { return: window.location.pathname },
                 })
-            }, [])
-            return (null)
-        }
-
-        const syncLogout = (event) => {
-            if (event.key === 'logout') {
-                router.push('/login')
-                return (null)
             }
-          }
-      
-          useEffect(() => {
-            window.addEventListener('storage', syncLogout)
-      
-            return () => {
-              window.removeEventListener('storage', syncLogout)
-            }
-          }, [])
+        }, [pageProps.auth.isLoggedIn])
 
         return <Component {...pageProps}/>
     }

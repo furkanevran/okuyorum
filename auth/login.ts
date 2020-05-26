@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-unfetch';
 import { Dispatch } from 'react';
+import { me } from './me';
 
 export const login = async (hook: Dispatch<any> = null, email, password) => {
     const ret = await fetch('/api/auth/login', {
@@ -11,10 +12,12 @@ export const login = async (hook: Dispatch<any> = null, email, password) => {
     })
 
     if(ret.status === 200) {
-        window.localStorage.setItem('login', Date.now()+'')
         if(hook) {
-            hook(true)
+            const u = await me()
+            hook(u)
         }
+
+        window.localStorage.setItem('login', Date.now()+'')
     }
 
     return ret

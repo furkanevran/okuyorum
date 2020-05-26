@@ -1,18 +1,17 @@
 import '../css/main.css'
 import Header from '../components/Header'
 import { AuthHelper } from '../utils/AuthHelper';
-import App from './App'
+import App from './app'
 
 function MyApp({ Component, pageProps, user }) {
-    const [isLoggedIn, setIsLoggedIn, RenderWithAuth, Logout, Login,currentUser, setUser] = AuthHelper(!!user)
+    const [isLoggedIn, setIsLoggedIn, RenderWithAuth, Logout, Login,currentUser, setUser] = AuthHelper(user)
     const auth = {
-        user,
         isLoggedIn,
         setIsLoggedIn,
         RenderWithAuth,
         Logout,
         Login,
-        currentUser,
+        user: currentUser,
         setUser
     }
     return (

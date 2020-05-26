@@ -13,11 +13,13 @@ type ProtectedProps = {
   }
 
 function protectedPage({a, books, query, auth}: ProtectedProps) {
+    if(!books) return (<h1>what</h1>)
     return (
     <>
       <Link href='/' ><a>index</a></Link>
+      <h1>Hello {auth.user.username}</h1>
         <h1>A: {a+''}</h1>
-        <h1>Hello {auth.user.username}</h1>
+        
         <hr/>
         <h2>Books that include '{query}'</h2>
         {books.map((book => (
@@ -28,6 +30,7 @@ function protectedPage({a, books, query, auth}: ProtectedProps) {
 }
 
 export const getServerSideProps = withAuth(async (ctx, user) => {
+    if(!user) return {props:{}}
     const query = 'EV'
     const search = await db.books.findByName(query);
     return {

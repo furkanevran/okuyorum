@@ -9,7 +9,7 @@ type BookProps = {
 }
 
 const Home = ({auth, books}) => {
-  const {RenderWithAuth, Logout} = auth
+  const {RenderWithAuth, Logout, user} = auth
 
   return (
   <>
@@ -19,6 +19,7 @@ const Home = ({auth, books}) => {
   </RenderWithAuth>
   <RenderWithAuth>
     <a onClick={() => Logout(false)}>Logout</a>
+    <h1>Hello '{user.username}'</h1>
   </RenderWithAuth>
       {books.map((book) => (
         <div key={book.name}>
