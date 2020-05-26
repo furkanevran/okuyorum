@@ -2,6 +2,7 @@
 
 # epubs
 /epub
+/public/epubdata
 
 # dependencies
 /node_modules

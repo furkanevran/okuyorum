@@ -15,6 +15,10 @@ export function pageAuthSync(Component: any){
             }
         }, [pageProps.auth.isLoggedIn])
 
+        if(pageProps.auth.isLoggedIn === false) {
+            return (null)
+        }
+
         return <Component {...pageProps}/>
     }
 

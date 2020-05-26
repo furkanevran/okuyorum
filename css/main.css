@@ -8,6 +8,7 @@ body {
     font-family: 'Open Sans' !important;
     color: #fff !important;
     background-color: #000 !important;
+    padding: 5px 5px;
 }
 
 a {
@@ -86,10 +87,6 @@ h3 > span {
 img {
     display: block;
     margin: 0 auto;
-}
-
-.header {
-    cursor:pointer;
 }
 
 .navigation {

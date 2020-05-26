@@ -23,27 +23,20 @@ const Home = ({auth, paginatedBooks}: BookProps) => {
       query: {page: page}
     })
     setPage(page)
+    window.scroll({top: 0, left: 0, behavior: 'smooth' })
   }
 
 
   return (
   <>
-  <Link href='/protected' as='protected'><a>protected</a></Link>
-  <RenderWithAuth invert>
-    <Link href='/login' as='login'><a>Login</a></Link>
-  </RenderWithAuth>
-  <RenderWithAuth>
-    <a onClick={() => Logout(false)}>Logout</a>
-    <h1>Hello '{user.username}'</h1>
-  </RenderWithAuth>
-  
-      {paginatedBooks.books.map((book) => (
-        <div key={book.name}>
-          <span>{book.id}</span>
-          <span> --- </span>
-          <span>{book.name}</span>
-          <br></br>
-        </div>
+      {paginatedBooks.books.map((x) => (
+          <Link href='/book/[id]' as={`/book/${x.id}`} key={x.name}>
+            <a className="book">
+              <img src={"/epubdata/"+x.id+"/"+x.cover_filename}></img>
+              <span>{x.name}</span>
+            </a>
+          </Link>
+
       ))}
       <ReactPaginate
       pageCount={paginatedBooks.pageCount}
@@ -55,9 +48,21 @@ const Home = ({auth, paginatedBooks}: BookProps) => {
         li {
           display: inline-block;
           margin: 0 10px;
+          padding: 5px 5px;
+          flex: 1;
+          text-align: center;
         }
         .active {
-          background-color: red;
+          border: 1px solid #eee;
+          border-radius: 10px;
+        }
+
+        ul {
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          margin-top: 15px;
+          display: flex;
         }
         `}</style>
   </>
