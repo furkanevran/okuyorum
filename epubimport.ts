@@ -1,4 +1,4 @@
-import * as pgPromise from 'pg-promise';
+import pgPromise from 'pg-promise';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as AdmZip from 'adm-zip'

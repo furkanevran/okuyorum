@@ -1,8 +1,7 @@
 import { db } from '../db'
 import Book from '../db/models/book';
-import {withAuth} from '../auth/withAuth'
-import { withAuthSync } from '../auth/withAuthSync';
 import Link from 'next/link';
+import { withAuth } from '../auth/withAuth';
 import { pageAuthSync } from '../auth/pageAuthSync';
 
 type ProtectedProps = {
@@ -11,7 +10,6 @@ type ProtectedProps = {
     auth: any,
     query: string
   }
-
 function protectedPage({a, books, query, auth}: ProtectedProps) {
     if(!books) return (<h1>what</h1>)
     return (

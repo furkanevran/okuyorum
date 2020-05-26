@@ -7,7 +7,8 @@ const path = require('path');
 export const books = {
     findById: sql('books/findById.sql'),
     findByName: sql('books/findByName.sql'),
-    page: sql('books/page.sql')
+    page: sql('books/page.sql'),
+    count: sql('books/count.sql')
 };
 
 export const users = {
