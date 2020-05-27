@@ -2,20 +2,34 @@ import { db } from '../../../db'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { hash } from  'bcrypt'
 
+function validateEmail(email): boolean {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if(req.method !== "POST") {
         res.status(405).end();
     }
 
     try {
-       const {username, email , pw } = req.query;
+       const {username, email , pw } = req.body;
        if((!email || email.length < 6) || (!pw || pw.length < 6) || (!username || username.length < 6)) {
-        res.status(400).end(); 
+        res.status(400).json({
+            message: 'All values must be longer than 5 characters.'
+        })
+       
+       }
+
+       if(!validateEmail(email)) {
+        res.status(400).json({
+            message: 'Enter a valid e-mail.'
+        })
        }
 
        const password_hash = await hash(pw, 12);
-       const post = db.users.create({username: <string>username, email: <string>email, password_hash})
-       res.status(200).json(post);
+       const post = await db.users.create({username: <string>username, email: <string>email, password_hash})
+       res.status(200).json({email: post.email});
     } catch (e) {
        console.error(e);
        let message = "A error occured.";

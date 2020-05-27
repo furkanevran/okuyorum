@@ -2,9 +2,15 @@ import Link from "next/link";
 import { AuthHelper } from "../utils/AuthHelper";
 import { useEffect } from "react";
 import useSWR from 'swr'
+import { useRouter } from 'next/router';
 
 export default function Header({auth}) {
+    const router = useRouter()
     const {isLoggedIn, setIsLoggedIn, RenderWithAuth, Logout} = auth
+    const query = router.pathname === '/login' || router.pathname === '/register'  ? '' : '?return='+router.asPath
+    const loginUrl = '/login'+query
+    const registerUrl = '/register'+query
+
     return (
         <div className="header">
             <div className="brand">
@@ -18,7 +24,8 @@ export default function Header({auth}) {
                 <a href='#' onClick={() => Logout()}>Logout</a>
             </RenderWithAuth>
             <RenderWithAuth invert>
-                <Link href="/login" as="/login"><a>Login</a></Link>
+                 <Link href={registerUrl} as={registerUrl}><a>Register</a></Link>
+                <Link href={loginUrl} as={loginUrl}><a>Login</a></Link>
             </RenderWithAuth>
             </div>
     <style jsx>{`
@@ -27,7 +34,7 @@ export default function Header({auth}) {
     margin: 20px 0;
 }
 .brand {
-    width: calc(100% - 150px);
+    width: calc(100% - 160px);
     display: inline-block;
 }
 
@@ -36,8 +43,9 @@ export default function Header({auth}) {
 }
 
 .menu {
-    width: 150px;
+    width: auto;
     display: inline-block;
+    text-align: center;
 }
 
 .menu a {
@@ -47,9 +55,24 @@ export default function Header({auth}) {
     margin-right: 5px;
 }
 
-@media only screen and (max-width: 440px) {
+@media screen and (max-width: 440px) {
     .menu {
-        margin-top: 50px;
+        display: block;
+        margin: 0 auto;
+    }
+    .brand {
+        width: 100%;
+        text-align: center;
+    }
+
+    .brand h3 {
+        margin-top: 0;
+        padding-top: 0;
+        margin-bottom: 10px;
+        font-size: 36px;
+    }
+    .header {
+        margin-top: 0;
     }
 }
     `}</style>

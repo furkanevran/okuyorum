@@ -8,7 +8,7 @@ export const AuthHelper = (user: any) => {
     let [currentUser,setUser] = useState(user)
     let [isLoggedIn,setLoggedIn] = useState(!!currentUser)
     let RenderWithAuthP = ({children, invert = false}) => (<RenderWithAuth isLoggedIn={isLoggedIn} update={setUser} invert={invert}>{children}</RenderWithAuth>)
-    let Logout = (redirect: boolean = false) => logout(setLoggedIn, redirect)
+    let Logout = (redirect: boolean = false) => logout(setLoggedIn,setUser, redirect)
     let Login = (email, password) => login(setUser, email, password)
     
     const syncAuth = async (event) => {
@@ -19,7 +19,7 @@ export const AuthHelper = (user: any) => {
 
     useEffect(() => {
       setLoggedIn(!!currentUser)
-
+      
       window.addEventListener('storage', syncAuth)
       return () => {
         window.removeEventListener('storage', syncAuth)
