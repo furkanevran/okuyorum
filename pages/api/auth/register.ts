@@ -14,18 +14,24 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
        const {username, email , pw } = req.body;
-       if((!email || email.length < 6) || (!pw || pw.length < 6) || (!username || username.length < 6)) {
-        res.status(400).json({
-            message: 'All values must be longer than 5 characters.'
-        })
        
-       }
+       if((!email || email.length < 6) || (!pw || pw.length < 6) || (!username || username.length < 6)) {
+            res.status(400).json({
+                message: 'Values must be longer than 5 characters.'
+            })
+        }
+
+        if(email.length > 32 || pw.length > 32 || username.length > 32) {
+            res.status(400).json({
+                message: 'Values can\'t be longer than 32 characters.'
+            })
+        }
 
        if(!validateEmail(email)) {
-        res.status(400).json({
-            message: 'Enter a valid e-mail.'
-        })
-       }
+            res.status(400).json({
+                message: 'Enter a valid e-mail.'
+            })
+        }
 
        const password_hash = await hash(pw, 12);
        const post = await db.users.create({username: <string>username, email: <string>email, password_hash})

@@ -9,7 +9,7 @@ body {
     color: #fff !important;
     background-color: #000 !important;
     padding: 5px 5px;
-    word-break: break-word;
+    /*word-break: break-word;*/
 }
 
 a {
