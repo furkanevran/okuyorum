@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { useEffect, createRef, useState } from 'react';
 import { useRouter } from 'next/router'
+import { parse } from 'querystring';
 
 export default function Login({auth}, query) {
     const {isLoggedIn, RenderWithAuth, Login} = auth
@@ -15,7 +16,22 @@ export default function Login({auth}, query) {
     useEffect(() => {
         if(isLoggedIn) {
             if (router.query.return) {
-                router.push(router.query.return+'')
+                const u = parse(router.query.return+'');
+                const queryCount = u[Object.keys(u)[0]] === '' ? 0 : Object.keys(u).length;
+                const url = queryCount > 0 ? Object.keys(u)[0].substring(0,Object.keys(u)[0].indexOf('?')) : router.query.return+''
+                let query
+                
+                for (let i = 0; i < queryCount; i++) {
+                    if(i === 0) {
+                        query = { [Object.keys(u)[0].substring(Object.keys(u)[0].indexOf('?')+1)]: u[Object.keys(u)[0]] } 
+                    }
+                    query = {...query, [Object.keys(u)[i]]: u[Object.keys(u)[i]]}
+                }
+                
+                router.push({
+                    pathname: url,
+                    query: query
+                })
             } else {
                router.push('/')
             }

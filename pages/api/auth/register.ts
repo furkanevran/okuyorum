@@ -10,6 +10,7 @@ function validateEmail(email): boolean {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if(req.method !== "POST") {
         res.status(405).end();
+        return
     }
 
     try {
@@ -19,23 +20,27 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             res.status(400).json({
                 message: 'Values must be longer than 5 characters.'
             })
+            return
         }
 
         if(email.length > 32 || pw.length > 32 || username.length > 32) {
             res.status(400).json({
                 message: 'Values can\'t be longer than 32 characters.'
             })
+            return
         }
 
        if(!validateEmail(email)) {
             res.status(400).json({
                 message: 'Enter a valid e-mail.'
             })
+            return
         }
 
        const password_hash = await hash(pw, 12);
        const post = await db.users.create({username: <string>username, email: <string>email, password_hash})
        res.status(200).json({email: post.email});
+       return
     } catch (e) {
        console.error(e);
        let message = "A error occured.";

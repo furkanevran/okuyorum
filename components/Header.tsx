@@ -21,7 +21,7 @@ export default function Header({auth}) {
             <div className="menu">
             <RenderWithAuth>
                 <Link href="/profile" as="/profile"><a>Profile</a></Link>
-                <a href='#' onClick={() => Logout()}>Logout</a>
+                <a onClick={() => Logout()}>Logout</a>
             </RenderWithAuth>
             <RenderWithAuth invert>
                  <Link href={registerUrl} as={registerUrl}><a>Register</a></Link>

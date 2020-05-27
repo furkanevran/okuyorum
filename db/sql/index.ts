@@ -13,7 +13,11 @@ export const books = {
 
 export const users = {
     create: sql('users/create.sql'),
-    findByEmail: sql('users/findByEmail.sql')
+    findByEmail: sql('users/findByEmail.sql'),
+    addBookToFavorites: sql('users/favorites/addBookToFavorites.sql'),
+    checkIfUserFavoritedBook: sql('users/favorites/checkBook.sql'),
+    removeBookFromFavorites: sql('users/favorites/removeBookFromFavorites.sql'),
+    getAllFavoriteBooks: sql('users/favorites/getAllFavoriteBooks.sql')
 };
 
 function sql(file: string): QueryFile {

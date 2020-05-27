@@ -3,6 +3,7 @@ import Header from '../components/Header'
 import { AuthHelper } from '../utils/AuthHelper';
 import App from './app'
 import Head from 'next/head'
+import User from '../db/models/user'
 import Router, { useRouter } from 'next/router'
 import { useEffect, useState } from 'react';
 
@@ -14,7 +15,7 @@ function MyApp({ Component, pageProps, user }) {
         RenderWithAuth,
         Logout,
         Login,
-        user: currentUser,
+        user: currentUser as User,
         setUser
     }
 
