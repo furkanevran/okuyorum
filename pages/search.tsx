@@ -1,6 +1,8 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useDebouncedSearch } from '../utils/useDebouncedSearch';
+import { useRouter } from "next/router";
+import Head from 'next/head';
 
 const asyncSearch = async (book) => {
     try {
@@ -22,13 +24,26 @@ const useSearchBooks = () => useDebouncedSearch(text => asyncSearch(text))
 
 
 export default function({auth}) {
+    const router = useRouter()
     const { inputText, setInputText, searchResults } = useSearchBooks();
+    const urlSearch = (text) => {
+        router.push('/search?name='+encodeURI(text), undefined, { shallow: true })
+        setInputText(text)
+    }
 
+    useEffect(() => {
+        if(router.query.name) {
+            setInputText(router.query.name+'')
+        }
+    })
 
     return (
         <>
+        <Head>
+            <title>{!!router.query.name ? `${decodeURI(router.query.name+'')} - Search` : 'Search'}</title>
+        </Head>
             <input type='text' placeholder={'Dorian Gray\'s Portrait'}
-            value={inputText} onChange={e => setInputText(e.target.value)}
+            value={inputText} onChange={e => urlSearch(e.target.value)}
             autoFocus={true}></input>
 
              {searchResults.loading && <div>Loading...</div>}
