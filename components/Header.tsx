@@ -3,6 +3,7 @@ import { AuthHelper } from "../utils/AuthHelper";
 import { useEffect } from "react";
 import useSWR from 'swr'
 import { useRouter } from 'next/router';
+import Fullscreen from "./Fullscreen";
 
 export default function Header({auth}) {
     const router = useRouter()
@@ -18,6 +19,7 @@ export default function Header({auth}) {
                     <h3>Oku<span>yorum</span></h3>
                 </Link>
             </div>
+            <Fullscreen></Fullscreen>
             <div className="menu">
                 {router.pathname === '/' ? (<Link href='/search' as='/search'><a>Search</a></Link>) : null}
             <RenderWithAuth>
@@ -63,6 +65,7 @@ export default function Header({auth}) {
         display: block;
         margin: 0 auto;
         width: 100%;
+        text-align: center
     }
     .brand {
         width: 100%;
