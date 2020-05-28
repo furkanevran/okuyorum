@@ -19,6 +19,7 @@ export default function Header({auth}) {
                 </Link>
             </div>
             <div className="menu">
+                {router.pathname === '/' ? (<Link href='/search' as='/search'><a>Search</a></Link>) : null}
             <RenderWithAuth>
                 <Link href="/profile" as="/profile"><a>Profile</a></Link>
                 <a onClick={() => Logout()}>Logout</a>
@@ -34,7 +35,7 @@ export default function Header({auth}) {
     margin: 20px 0;
 }
 .brand {
-    width: calc(100% - 160px);
+    width: calc(100% - 240px);
     display: inline-block;
 }
 
@@ -46,6 +47,8 @@ export default function Header({auth}) {
     width: auto;
     display: inline-block;
     text-align: center;
+    text-align: right;
+    width: 240px;
 }
 
 .menu a {
@@ -55,10 +58,11 @@ export default function Header({auth}) {
     margin-right: 5px;
 }
 
-@media screen and (max-width: 440px) {
+@media screen and (max-width: 530px) {
     .menu {
         display: block;
         margin: 0 auto;
+        width: 100%;
     }
     .brand {
         width: 100%;

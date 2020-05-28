@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "adm-zip": "^0.4.14",
+    "awesome-debounce-promise": "^2.1.0",
     "bcrypt": "^4.0.1",
     "bluebird": "^3.7.2",
     "cookie": "^0.4.1",
@@ -19,9 +20,11 @@
     "next": "9.4.2",
     "pg-promise": "^10.5.6",
     "react": "16.13.1",
+    "react-async-hook": "^3.6.1",
     "react-dom": "16.13.1",
     "react-paginate": "^6.3.2",
-    "swr": "^0.2.2"
+    "swr": "^0.2.2",
+    "use-constant": "^1.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

@@ -32,11 +32,11 @@ const Home = ({auth, paginatedBooks}: BookProps) => {
       {paginatedBooks.books.map((x) => (
           <Link href='/book/[id]' as={`/book/${x.id}`} key={x.name}>
             <a className="book">
+            
               <img src={"/epubdata/"+x.id+"/"+x.cover_filename}></img>
               <span>{x.name}</span>
             </a>
           </Link>
-
       ))}
       <ReactPaginate
       pageCount={paginatedBooks.pageCount}
