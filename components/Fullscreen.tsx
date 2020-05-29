@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FaExpand } from 'react-icons/fa';
 import { FaCompress } from 'react-icons/fa';
+import { FaChevronLeft } from 'react-icons/fa'
+import { useRouter } from 'next/router';
 
 function requestFullscreen() {
     if (document.documentElement.requestFullscreen) {
@@ -42,6 +44,7 @@ function openFullscreen() {
   
 export default function() {
     const [isFs, setFs] = useState(false)
+    const router = useRouter()
 
     if (typeof window !== 'undefined') {
         const renderThis = requestFullscreen()
@@ -72,15 +75,16 @@ export default function() {
     return (
         <>
         <a onClick={() => fullScreen()}>{isFs ? <FaCompress></FaCompress> : <FaExpand></FaExpand>}</a>
+        {isFs ? <a style={{marginTop: 35}} onClick={() => router.back()}> <FaChevronLeft></FaChevronLeft></a> : null}
         <style jsx>{`
 a {
     position: absolute;
     top: 20px;
     right: 20px;
-    height: 45px;
-    width: 45px;
+    height: 35px;
+    width: 35px;
     text-align: center;
-    line-height: 45px;
+    line-height: 35px;
 }
         `}</style>
         </>

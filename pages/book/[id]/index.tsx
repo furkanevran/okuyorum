@@ -1,22 +1,27 @@
 import { useRouter } from "next/router"
 import { GetServerSideProps } from "next";
-import { db } from '../../db'
+import { db } from '../../../db'
 import { useEffect, useState } from "react";
-import User from "../../db/models/user";
-import Book from '../../db/models/book';
-import { withAuth } from "../../auth/withAuth";
+import User from "../../../db/models/user";
+import Book from '../../../db/models/book';
+import { withAuth } from "../../../auth/withAuth";
 import fetch from 'isomorphic-unfetch';
-
+import ReactHtmlParser from 'react-html-parser'
+import Chapter from "../../../db/models/chapter";
+import Link from "next/link";
+import { FaHeart } from 'react-icons/fa'
+import decodeHtml from '../../../utils/unescapeHtml';
 export interface AuthProps {
     auth: {
         user: User,
         RenderWithAuth: any
     },
     book: Book,
+    chapters: Chapter[],
     isFavorited: Boolean
 }
 
-export default function({auth, book, isFavorited:_isFavorited}: AuthProps) {
+export default function({auth, book, isFavorited:_isFavorited, chapters}: AuthProps) {
     const router = useRouter()
     const [isFavorited, setIsFavorited] = useState(_isFavorited)
 
@@ -63,21 +68,39 @@ export default function({auth, book, isFavorited:_isFavorited}: AuthProps) {
     }
 
     return (
-        <>
+        <div>
+        
+        <img src={"/epubdata/"+book.id+"/"+book.cover_filename}></img>
+        
+        <h1 style={{marginBottom: 10}}>{book.name}</h1> 
         <RenderWithAuth>
             {isFavorited === false ? (
-                <div onClick={AddToFavorites}>add to favorites</div>
+                <FaHeart style={{color: 'white', fontSize: 24, cursor: 'pointer'}} onClick={AddToFavorites}></FaHeart>
             )
             : isFavorited === true ? (
-                <div onClick={RemoveFromFavorites}>remove from favorites</div>
+                <FaHeart style={{color: 'red', fontSize: 24, cursor: 'pointer'}} onClick={RemoveFromFavorites}>remove from favorites</FaHeart>
             ): null}
         </RenderWithAuth>
-        <div>{JSON.stringify(book)}</div>
-        <hr/>
-        <div><p>{JSON.stringify(auth, null, 4)}</p></div>
-        <hr/>
-        <div>{JSON.stringify(id)}</div>
-        </>
+        
+        <div key={book.id+'d'} dangerouslySetInnerHTML={{__html: decodeHtml(book.description)}}></div>
+        <hr></hr>
+        {chapters.map((x,i) => (
+            <Link key={x.name} href={`/book/[id]/chapter/[chapter]`} as={`/book/${id}/chapter/${x.id}`} >
+            <a>Bölüm {x.name}</a>
+          </Link> 
+        ))}
+        <style jsx>{`
+            a {
+                box-sizing: border-box;
+                width: 100%;
+                display: block;
+                padding: 5px 0;
+            }
+            img {
+                width: 100%;
+            }
+            `}</style>
+        </div>
     )
 }
 
@@ -86,7 +109,8 @@ export const getServerSideProps: GetServerSideProps = withAuth(async (ctx, user:
         return {
             props: {
                 book: await db.books.findById(+ctx.params.id),
-                isFavorited: !!user ? !!await db.users.checkIfUserFavoritedBook({user_id: user.id, book_id: ctx.params.id}) : false
+                isFavorited: !!user ? !!await db.users.checkIfUserFavoritedBook({user_id: user.id, book_id: ctx.params.id}) : false,
+                chapters: await db.books.getChapters(ctx.params.id as bigint)
             }
         }
     }
@@ -94,7 +118,8 @@ export const getServerSideProps: GetServerSideProps = withAuth(async (ctx, user:
     return {
         props: {
             book: null,
-            isFavorited: null
+            isFavorited: null,
+            chapters: null
         }
     }
 })

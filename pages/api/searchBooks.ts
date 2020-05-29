@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
         const books = await db.books.findByName(name+'')
-        res.status(200).json(books)
+        res.status(200).send(books)
     } catch (e) {
         console.log(e)
         error(res)

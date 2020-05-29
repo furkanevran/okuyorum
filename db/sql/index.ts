@@ -8,7 +8,9 @@ export const books = {
     findById: sql('books/findById.sql'),
     findByName: sql('books/findByName.sql'),
     page: sql('books/page.sql'),
-    count: sql('books/count.sql')
+    count: sql('books/count.sql'),
+    getChapters: sql('books/getChapters.sql'),
+    getParagraphs: sql('books/getParagraphs.sql')
 };
 
 export const users = {
