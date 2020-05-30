@@ -13,8 +13,8 @@ body {
 }
 
 a {
-    color: #fff;
-    text-decoration: none;
+    color: #fff !important;
+    text-decoration: none !important;
 }
 
 .okuyorum {
@@ -26,10 +26,7 @@ a {
 .okuyorum p,.okuyorum  span,.okuyorum div,.okuyorum  h1,.okuyorum  h2,.okuyorum  h3,.okuyorum  h4,.okuyorum  h5,.okuyorum  h6,.okuyorum  article {
     font-family: 'Open Sans' !important;
     color: #fff !important;
-}
-
-.okuyorum:hover {
-    background-color: #080808;
+    max-width: 100%;
 }
 
 button {
@@ -126,3 +123,8 @@ img {
     height: calc(100% + 100px);
     top: -50px;
 }
+
+
+#nprogress .bar {
+    background: #fff !important;
+  }

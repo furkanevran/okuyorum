@@ -1,4 +1,6 @@
 import '../css/main.css'
+import 'nprogress/nprogress.css'
+import NProgress from 'nprogress'; 
 import Header from '../components/Header'
 import { AuthHelper } from '../utils/AuthHelper';
 import App from './app'
@@ -22,26 +24,51 @@ function MyApp({ Component, pageProps, user }) {
     const router = useRouter()
     const [scrollBefore, setScrollBefore] = useState(0)
     const [pageBefore, setPageBefore] = useState(null)
+
+    useEffect(() => {
+        NProgress.inc(2);
+        NProgress.configure({ 
+            trickleSpeed: 200,
+            showSpinner: false,
+            speed: 100
+         });
+    }, [])
+
     useEffect(() => {
 
-        const backup = () => {
+        const backup = (url) => {
+            if(!url.includes('comment') && !(router.asPath.includes('comment'))) {
+                NProgress.start();
+            }
+            
             setScrollBefore(window.pageYOffset)
             setPageBefore(router.asPath)
             router.events.off('routeChangeStart', backup)
         }
 
         const restore = (url) => {
+            if(!url.includes('comment') && !(router.asPath.includes('comment'))) {
+                NProgress.done();
+            }
+            
             if(pageBefore == url) {
                 window.scroll({top: scrollBefore, left: 0})
             }
         }
 
+        const routeChangeEnd = () => {
+            NProgress.done();
+        }
+
         router.events.on('routeChangeStart', backup)
         router.events.on('routeChangeComplete', restore)
+        router.events.on('routeChangeError', routeChangeEnd);
 
         return () => {
+            NProgress.done();
             router.events.off('routeChangeStart', backup)
             router.events.off('routeChangeComplete', restore)
+            router.events.off('routeChangeError', routeChangeEnd);
         }
     },[router.asPath])
 

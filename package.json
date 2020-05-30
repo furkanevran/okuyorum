@@ -18,6 +18,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "next": "9.4.2",
+    "nprogress": "^0.2.0",
     "pg-promise": "^10.5.6",
     "react": "16.13.1",
     "react-async-hook": "^3.6.1",
