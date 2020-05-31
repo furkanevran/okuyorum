@@ -6,6 +6,7 @@ import {books as sql} from '../sql';
 import { books } from '../sql/index';
 import Chapter from '../models/chapter';
 import Paragraph from '../models/paragraph';
+import Genre from '../models/genre';
 
 export class BooksRepository {
     constructor(private db: IDatabase<any>, private pgp: IMain) {
@@ -13,6 +14,12 @@ export class BooksRepository {
 
     async findById(id: number): Promise<Book | null> {
         return this.db.oneOrNone(sql.findById, {
+            id: +id,
+        });
+    }
+
+    async findGenresById(id: number): Promise<Genre[] | null> {
+        return this.db.manyOrNone(sql.findGenresById, {
             id: +id,
         });
     }

@@ -6,8 +6,9 @@ import User from '../../../../db/models/user';
 import Paragraph from '../../../../db/models/paragraph';
 import Link from "next/link";
 import { useState, useEffect } from 'react';
-import { FaTimes } from 'react-icons/fa'
+import { FaTimes, FaHeart, FaThumbsUp } from 'react-icons/fa'
 import ReactHtmlParser from 'react-html-parser';
+import { PreparedStatement } from "pg-promise";
 const { serverRuntimeConfig } = getConfig()
 
 export interface ChapterTypes {
@@ -20,8 +21,8 @@ export interface ChapterTypes {
 }
 
 const CommentModal = ({auth, isOpen, p, close}) => {
-    if(!auth.user || !isOpen) return (null)
-
+    if(!isOpen) return (null)
+    const {RenderWithAuth} = auth
     function shouldIClose(e) {
         if(!e.target.className || typeof e.target.className.includes === 'undefined') return
         if(e.target.className.includes('modal')) {
@@ -34,8 +35,57 @@ const CommentModal = ({auth, isOpen, p, close}) => {
         <div className="content">
             <div className="p" dangerouslySetInnerHTML={{__html: decodeHtml(p.text)}}></div>
             <div className="close" onClick={close}><FaTimes></FaTimes></div>
+            <div>
+                <div style={{marginTop: 20}}>Comments</div>
+                <RenderWithAuth>
+                    <input type='text' placeholder='Wow... that was deep.'></input>
+                </RenderWithAuth>
+                <ul>
+                    <li>
+                        <div>Username</div>
+                        <div>comment comment comment comment comment comment comment comment comment comment comment comment comment comment comment </div>
+                        <RenderWithAuth>
+                            <div>
+                            <FaHeart></FaHeart>
+                            <FaThumbsUp></FaThumbsUp>
+                            </div>
+                        </RenderWithAuth>
+                    </li>
+                    <li>
+                        <div>Username</div>
+                        <div>comment comment comment comment comment comment comment comment comment comment comment comment comment comment comment </div>
+                    </li>
+                </ul>
+            </div>
         </div>
         <style jsx>{`
+        input {
+                box-sizing: border-box;
+                display: block;
+                width: 100%;
+                padding: 5px 10px;
+                border-radius: 10px;
+                margin-top: 10px;
+                font-size: 18px;
+                background-color: transparent;
+                outline: none;
+                border: 1px solid #eee;
+                color: #fff;
+            }
+
+            li {
+                border-left: 5px solid #fff;
+                padding-left: 10px;
+                list-style: none;
+                margin-left: 5px;
+                margin-top: 10px;
+            }
+
+            ul {
+                margin: 0;
+                padding: 0;
+            }
+
             .modal {
                 position: fixed;
                 top: 0; left: 0;
@@ -76,6 +126,11 @@ const CommentModal = ({auth, isOpen, p, close}) => {
                     .p p {
                         outline: 3px solid #fff !important;
                         font-family: 'Open Sans', sans-serif;
+                    }
+
+                    svg {
+                        margin-left: 5px;
+                        cursor: pointer;
                     }
         `}</style>
         </div>

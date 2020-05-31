@@ -10,7 +10,8 @@ export const books = {
     page: sql('books/page.sql'),
     count: sql('books/count.sql'),
     getChapters: sql('books/getChapters.sql'),
-    getParagraphs: sql('books/getParagraphs.sql')
+    getParagraphs: sql('books/getParagraphs.sql'),
+    findGenresById: sql('books/findGenresById.sql')
 };
 
 export const users = {

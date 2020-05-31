@@ -15,7 +15,7 @@ export default function Login({auth}, query) {
 
     useEffect(() => {
         if(isLoggedIn) {
-            if (router.query.return) {
+            /*if (router.query.return) {
                 const u = parse(router.query.return+'');
                 const queryCount = u[Object.keys(u)[0]] === '' ? 0 : Object.keys(u).length;
                 const url = queryCount > 0 ? Object.keys(u)[0].substring(0,Object.keys(u)[0].indexOf('?')) : router.query.return+''
@@ -28,13 +28,17 @@ export default function Login({auth}, query) {
                     query = {...query, [Object.keys(u)[i]]: u[Object.keys(u)[i]]}
                 }
                 
+                console.log(url)
+                console.log(query)
+
                 router.push({
                     pathname: url,
                     query: query
                 })
             } else {
                router.push('/')
-            }
+            }*/
+            router.back()
         }
 
         return () => {

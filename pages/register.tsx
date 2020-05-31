@@ -46,12 +46,10 @@ export default function Login({auth}, query) {
                 clearTimeout(timer)
                 let query = {
                     email: json.email as string,
-                    return: '/profile'
+                    return: ''
                 }
 
-                if(router.query.return) {
-                    query = {...query, return: router.query.return+''}
-                }
+            
 
                 router.push({
                     pathname: '/login',

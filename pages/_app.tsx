@@ -26,13 +26,12 @@ function MyApp({ Component, pageProps, user }) {
     const [pageBefore, setPageBefore] = useState(null)
 
     useEffect(() => {
-        NProgress.inc(2);
         NProgress.configure({ 
             trickleSpeed: 200,
             showSpinner: false,
             speed: 100
          });
-    }, [])
+    })
 
     useEffect(() => {
 

@@ -65,7 +65,7 @@ export default function({auth, books}) {
         <Head>
             <title>{!!router.query.name ? `${unescape(router.query.name+'')} - Search` : 'Search'}</title>
         </Head>
-            <input type='text' placeholder={'Dorian Gray\'s Portrait'}
+            <input type='text' placeholder={'Book name or genre'}
             value={inputText} onChange={e => urlSearch(e.target.value)}
             ref={focusRef}></input>
 

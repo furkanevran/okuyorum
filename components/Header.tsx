@@ -8,9 +8,9 @@ import Fullscreen from "./Fullscreen";
 export default function Header({auth}) {
     const router = useRouter()
     const {isLoggedIn, setIsLoggedIn, RenderWithAuth, Logout} = auth
-    const query = router.pathname === '/login' || router.pathname === '/register'  ? '' : '?return='+router.asPath
-    const loginUrl = '/login'+query
-    const registerUrl = '/register'+query
+    //const query = router.pathname === '/login' || router.pathname === '/register'  ? '' : '?return='+router.asPath
+    const loginUrl = '/login'
+    const registerUrl = '/register'
 
     return (
         <div className="header">
