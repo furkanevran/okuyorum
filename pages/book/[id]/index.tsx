@@ -20,13 +20,14 @@ export interface AuthProps {
     book: Book,
     chapters: Chapter[],
     isFavorited: Boolean,
-    genres: Genre[]
+    genres: Genre[],
+    favCount: number
 }
 
-export default function({auth, book, isFavorited:_isFavorited, chapters, genres}: AuthProps) {
+export default function({auth, book, isFavorited:_isFavorited, chapters, genres, favCount: _favCount}: AuthProps) {
     const router = useRouter()
     const [isFavorited, setIsFavorited] = useState(_isFavorited)
-
+    const [favCount, setFavCount] = useState(_favCount)
 
     if(!book) {
         useEffect(() => {
@@ -52,6 +53,11 @@ export default function({auth, book, isFavorited:_isFavorited, chapters, genres}
 
         if(ret.status === 200) {
             setIsFavorited(true)
+            if(_isFavorited) {
+                setFavCount(_favCount)
+            } else {
+                setFavCount(+_favCount+1)
+            }
         }
     }
 
@@ -66,6 +72,11 @@ export default function({auth, book, isFavorited:_isFavorited, chapters, genres}
 
         if(ret.status === 200) {
             setIsFavorited(false)
+            if(_isFavorited) {
+                setFavCount(+_favCount-1)
+            } else {
+                setFavCount(_favCount)
+            }
         }
     }
 
@@ -73,23 +84,45 @@ export default function({auth, book, isFavorited:_isFavorited, chapters, genres}
         <div>
         
         <img src={"/epubdata/"+book.id+"/"+book.cover_filename}></img>
+        {genres && genres.length > 0 ? (
+            
         <ul>
-            {genres && genres.map(genre => (
+            {genres.map(genre => (
                 <li><Link href={`/search?name=${genre.genre}`} as={`/search?name=${genre.genre}`}>
                 <a>{genre.genre}</a>    
                 </Link></li>
             ))}
         </ul>
+            ) : null}
+        
         <h1 style={{marginBottom: 10}}>{book.name}</h1> 
+        <div className="heart">
         <RenderWithAuth>
+            <>
             {isFavorited === false ? (
-                <FaHeart style={{color: 'white', fontSize: 24, cursor: 'pointer'}} onClick={AddToFavorites}></FaHeart>
+                <div onClick={AddToFavorites}>
+                    <FaHeart style={{color: 'white', fontSize: 24}}></FaHeart>
+                    <div>{favCount}</div>
+                </div>
             )
             : isFavorited === true ? (
-                <FaHeart style={{color: 'red', fontSize: 24, cursor: 'pointer'}} onClick={RemoveFromFavorites}>remove from favorites</FaHeart>
+                <div onClick={RemoveFromFavorites}>
+                    <FaHeart style={{color: 'red', fontSize: 24}}></FaHeart>
+                    <div>{favCount}</div>
+                </div>
             ): null}
+            </>
+        </RenderWithAuth>
+        <RenderWithAuth invert>
+            <Link href="/login">
+            <div>
+                <FaHeart style={{color: '#888', fontSize: 24, cursor: 'pointer'}}></FaHeart>
+                <div>{favCount}</div>
+            </div>
+            </Link>
         </RenderWithAuth>
         
+        </div>
         <div key={book.id+'d'} className="desc">{ReactHtmlParser(decodeHtml(book.description))}</div>
         <hr></hr>
         {chapters.map((x,i) => (
@@ -107,18 +140,20 @@ export default function({auth, book, isFavorited:_isFavorited, chapters, genres}
             img {
                 width: 100%;
             }
-            li {
+li {
     list-style: none;
     margin-right: 10px;
     border: 1px solid #eee;
     border-radius: 10px;
+    margin-top: 10px;
 }
 
 ul {
     margin: 0;
     padding: 0;
     display: flex;
-    margin-top: 20px;
+    margin-top: 10px;
+    flex-wrap: wrap;
 }
 
 li > a {
@@ -126,6 +161,17 @@ li > a {
     width: 100%;
     display: block;
     padding: 10px 10px !important;
+}
+.heart > div {
+    display: flex;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+}
+
+.heart div > div {
+    margin-left: 10px;
 }
             `}</style>
             <style>
@@ -135,6 +181,9 @@ li > a {
                     background-color: #000 !important;
                     max-width: 100%;
                 }
+                .heart svg {
+                    margin-top: 9px;
+                }
                 `}
             </style>
         </div>
@@ -142,13 +191,20 @@ li > a {
 }
 
 export const getServerSideProps: GetServerSideProps = withAuth(async (ctx, user: User) => {
+    let favC = 0
     if(ctx.params.id) {
+        favC = (await db.oneOrNone(`SELECT SUM(1) FROM books
+        INNER JOIN user_favorite_books ufb on books.id = ufb.book_id
+        WHERE id = $1
+        GROUP BY id;`, [+ctx.params.id]))
+
         return {
             props: {
                 book: await db.books.findById(+ctx.params.id),
                 isFavorited: !!user ? !!await db.users.checkIfUserFavoritedBook({user_id: user.id, book_id: ctx.params.id}) : false,
                 chapters: await db.books.getChapters(ctx.params.id as bigint),
-                genres: await db.books.findGenresById(+ctx.params.id)
+                genres: await db.books.findGenresById(+ctx.params.id),
+                favCount: !favC ? 0 : favC['sum']
             }
         }
     }
@@ -158,7 +214,8 @@ export const getServerSideProps: GetServerSideProps = withAuth(async (ctx, user:
             book: null,
             isFavorited: null,
             chapters: null,
-            genres: null
+            genres: null,
+            favCount: favC
         }
     }
 })
