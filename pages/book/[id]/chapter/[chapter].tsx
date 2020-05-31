@@ -173,6 +173,70 @@ export default function({auth, css, data, nextChapter} : ChapterTypes) {
             setIsOpen(false)
         }
     },[router.query.comment])
+
+    const [listenGesture, setListenGesture] = useState(false)
+    const [lastScreenX, setLastScreenX] = useState(0)
+    const [lastScreenY, setLastScreenY] = useState(0)
+
+    function start(e) {
+        var touch = e.originalEvent && e.originalEvent.touches && e.originalEvent.touches[0];
+        e = touch || e;
+
+        if(e.screenX) {
+            setLastScreenX(e.screenX)
+            setLastScreenY(e.screenY)
+        } else {
+            setLastScreenX(e.touches[0].pageX)
+            setLastScreenY(e.touches[0].pageY)
+        }
+        
+        setListenGesture(true)
+    }
+
+    function end(e) {
+        setListenGesture(false)
+
+        var touch = e.originalEvent && e.originalEvent.touches && e.originalEvent.changedTouches[0];
+        e = touch || e;
+
+        let screenX
+        let screenY
+        if(e.screenX) {
+            screenX = e.screenX
+            screenY = e.screenY
+        } else {
+            screenX = e.changedTouches[0].pageX
+            screenY = e.changedTouches[0].pageY
+        }
+
+        if(screenY - lastScreenY > 100) return
+
+        if((screenX - lastScreenX) > window.innerWidth*0.65) {
+            if(nextChapter) {
+                router.push('/book/[id]/chapter/[chapter]', `/book/${id}/chapter/${nextChapter['id']}`)
+            } else {
+                router.push('/book/[id]/', `/book/${id}/`)
+            }
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener('mousedown', start)
+        window.addEventListener('touchstart', start)
+
+        if(listenGesture) {
+        window.addEventListener('mouseup', end)
+        window.addEventListener('touchend', end)
+    }
+        return () => {
+            window.removeEventListener('mouseup', end)
+            window.removeEventListener('touchend', end)
+        
+            window.removeEventListener('mousedown', start)
+            window.removeEventListener('touchstart', start)
+        }
+    
+    }, [listenGesture])
     
     return (
         <>
@@ -180,6 +244,7 @@ export default function({auth, css, data, nextChapter} : ChapterTypes) {
             <link href={file} rel="stylesheet"></link>
         )): null}
         <CommentModal auth={auth} close={() => setIsOpen(false)} isOpen={isOpen} p={activeP}></CommentModal>
+       <div>
         {data ? data.map(p => {
             if(isOpen === null && router.query.comment) {
                 if(p.id+'' === router.query.comment+'') {
@@ -213,6 +278,7 @@ img {
     position: relative;
 }
         `}</style>
+        </div>
         </>
     )
 }
