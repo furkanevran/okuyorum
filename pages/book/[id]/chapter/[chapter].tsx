@@ -105,13 +105,15 @@ fetch('/api/getParagraphComments?paragraph_id='+p.id, {
                     <li>
                         <div>{comment.username}</div>
                         <div>{comment.comment}</div>
+                        <div style={{textAlign: 'right'}}>
                         <RenderWithAuth>
-                            <div style={{textAlign: 'right'}}>
                                 {comment.didilikeit ? (<FaHeart style={{color:'red'}}></FaHeart>) : (<FaHeart></FaHeart>)}
-                            
-                            <span style={{marginLeft: '10px'}}>{comment.likecount}</span>
-                            </div>
                         </RenderWithAuth>
+                        <RenderWithAuth invert>
+                               <Link href='/login' as='login'><FaHeart style={{color:'#888'}}></FaHeart></Link>
+                        </RenderWithAuth>
+                        <span style={{marginLeft: '10px'}}>{comment.likecount}</span>
+                            </div>
                     </li>
                     )): <li>Loading...</li>
                     ) : (<li>A error occured.</li>)}
