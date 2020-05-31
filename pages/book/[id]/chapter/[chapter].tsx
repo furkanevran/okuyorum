@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { FaTimes, FaHeart, FaThumbsUp } from 'react-icons/fa'
 import ReactHtmlParser from 'react-html-parser';
 import { PreparedStatement } from "pg-promise";
+import Router from 'next/router';
 const { serverRuntimeConfig } = getConfig()
 
 export interface ChapterTypes {
@@ -186,8 +187,8 @@ export default function({auth, css, data, nextChapter} : ChapterTypes) {
             setLastScreenX(e.screenX)
             setLastScreenY(e.screenY)
         } else {
-            setLastScreenX(e.touches[0].pageX)
-            setLastScreenY(e.touches[0].pageY)
+            setLastScreenX(e.touches[0].screenX)
+            setLastScreenY(e.touches[0].screenY)
         }
         
         setListenGesture(true)
@@ -205,18 +206,20 @@ export default function({auth, css, data, nextChapter} : ChapterTypes) {
             screenX = e.screenX
             screenY = e.screenY
         } else {
-            screenX = e.changedTouches[0].pageX
-            screenY = e.changedTouches[0].pageY
+            screenX = e.changedTouches[0].screenX
+            screenY = e.changedTouches[0].screenY
         }
-
-        if(screenY - lastScreenY > 100) return
-
-        if((screenX - lastScreenX) > window.innerWidth*0.65) {
+        
+        if(screenY - lastScreenY > 120 || screenY - lastScreenY < -120) return
+        
+        if((screenX - lastScreenX) > window.innerWidth*0.45) {
             if(nextChapter) {
-                router.push('/book/[id]/chapter/[chapter]', `/book/${id}/chapter/${nextChapter['id']}`)
+                Router.push('/book/[id]/chapter/[chapter]', `/book/${id}/chapter/${nextChapter['id']}`)
             } else {
-                router.push('/book/[id]/', `/book/${id}/`)
+                Router.push('/book/[id]/', `/book/${id}/`)
             }
+
+            window.scroll({top: 0, left: 0, behavior: 'smooth'})
         }
     }
 
