@@ -13,12 +13,15 @@ const error = (res: NextApiResponse) => {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if(req.method !== "POST") {
         res.status(405).end();
+        return
     }
 
     try {
        const {email , pw } = req.body;
+       console.log(req.body)
        if((!email || email.length < 6) || (!pw || pw.length < 6)) {
         res.status(400).end(); 
+        return
        }
 
        const post = await db.users.findByEmail(<string>email)

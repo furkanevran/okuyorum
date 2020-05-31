@@ -11,7 +11,9 @@ export const books = {
     count: sql('books/count.sql'),
     getChapters: sql('books/getChapters.sql'),
     getParagraphs: sql('books/getParagraphs.sql'),
-    findGenresById: sql('books/findGenresById.sql')
+    findGenresById: sql('books/findGenresById.sql'),
+    getParagraphComments: sql('books/getParagraphComments.sql'),
+    insertParagraphComment: sql('books/insertParagraphComment.sql')
 };
 
 export const users = {

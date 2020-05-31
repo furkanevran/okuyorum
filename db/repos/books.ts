@@ -45,6 +45,21 @@ export class BooksRepository {
         });
     }
 
+    async makeParagraphComment(values: {comment: string, paragraph_id: bigint, user_id: bigint}) {
+        return this.db.none(sql.insertParagraphComment, {
+            comment: values.comment,
+            paragraph_id: values.paragraph_id,
+            user_id: values.user_id
+        })
+    }
+
+    async getParagraphComments(values: {paragraph_id: number, user_id: number}): Promise<any[]> {
+        return this.db.manyOrNone(sql.getParagraphComments, {
+            user_id: values.user_id,
+            paragraph_id: values.paragraph_id,
+        })
+    }
+
     async getParagraphs(chapter_id: bigint): Promise<Paragraph[] | null> {
         return this.db.manyOrNone(sql.getParagraphs, {
             chapter_id: chapter_id

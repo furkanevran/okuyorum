@@ -3,6 +3,7 @@ import * as dbConfig from './db-config';
 import pgPromise from 'pg-promise';
 import {IInitOptions, IDatabase, IMain} from 'pg-promise';
 import {IExtensions, BooksRepository, UserRepository} from './repos';
+import * as monitor from 'pg-monitor'
 
 type ExtendedProtocol = IDatabase<IExtensions> & IExtensions;
 
@@ -16,6 +17,10 @@ const initOptions: IInitOptions<IExtensions> = {
     }
 };
 
+if(process.env.NODE_ENV === 'development') {
+    if(monitor.isAttached()) monitor.detach()
+    monitor.attach(initOptions)
+}
 const pgp: IMain = pgPromise(initOptions);
 
 //we cast timestamp objects to string

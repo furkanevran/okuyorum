@@ -5,10 +5,10 @@ import decodeHtml from "../../../../utils/unescapeHtml"
 import User from '../../../../db/models/user';
 import Paragraph from '../../../../db/models/paragraph';
 import Link from "next/link";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createRef } from 'react';
 import { FaTimes, FaHeart, FaThumbsUp } from 'react-icons/fa'
 import ReactHtmlParser from 'react-html-parser';
-import { PreparedStatement } from "pg-promise";
+import fetch from 'isomorphic-unfetch'
 import Router from 'next/router';
 const { serverRuntimeConfig } = getConfig()
 
@@ -24,10 +24,68 @@ export interface ChapterTypes {
 const CommentModal = ({auth, isOpen, p, close}) => {
     if(!isOpen) return (null)
     const {RenderWithAuth} = auth
+    const [comments, setComments] = useState(null)
+    const [err, setErr] = useState(false)
+    const [posting, setPosting] = useState(false)
+
+    useEffect(() => {
+fetch('/api/getParagraphComments?paragraph_id='+p.id, {
+    method: 'GET',
+}).then(r => {
+    if(r.status === 200) {
+        setErr(false)
+    } else {
+        setErr(true)
+    }
+
+    return r.json()
+}).then(data => {
+    setComments(data)
+    console.log(data)
+})
+        
+    }, [p])
+
+
     function shouldIClose(e) {
         if(!e.target.className || typeof e.target.className.includes === 'undefined') return
         if(e.target.className.includes('modal')) {
             close()
+        }
+    }
+
+    const [commentValue, setCommentValue] = useState('')
+
+    function handleChange(e) {
+        if(!posting) setCommentValue(e.target.value)
+    }
+
+    function makeComment(e)  {
+        if(posting) return
+        if(e.key === 'Enter') {
+            if(commentValue.length > 0) {
+                setPosting(true)
+                fetch('/api/user/makeParagraphComment', {
+                    method: 'POST',
+                    body: JSON.stringify({'comment':commentValue,'paragraph_id':p.id}),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(r => {
+                    if(r.status === 200) {
+                        setComments([{
+                            comment: commentValue,
+                            username: auth.user.username,
+                            likecount: 0,
+                            didilikeit: false
+                        },...comments])
+                        setCommentValue('')
+                        setPosting(false)
+                    } else {
+                        console.log('fail')
+                    }
+                })
+            }
         }
     }
 
@@ -39,23 +97,24 @@ const CommentModal = ({auth, isOpen, p, close}) => {
             <div>
                 <div style={{marginTop: 20}}>Comments</div>
                 <RenderWithAuth>
-                    <input type='text' placeholder='Wow... that was deep.'></input>
+                    <input value={commentValue} onChange={handleChange} onKeyDown={(e) => makeComment(e)} type='text' placeholder='Wow... that was deep.'></input>
                 </RenderWithAuth>
                 <ul>
+                    {!err ? (
+                    !!comments ? comments.map(comment => (
                     <li>
-                        <div>Username</div>
-                        <div>comment comment comment comment comment comment comment comment comment comment comment comment comment comment comment </div>
+                        <div>{comment.username}</div>
+                        <div>{comment.comment}</div>
                         <RenderWithAuth>
-                            <div>
-                            <FaHeart></FaHeart>
-                            <FaThumbsUp></FaThumbsUp>
+                            <div style={{textAlign: 'right'}}>
+                                {comment.didilikeit ? (<FaHeart style={{color:'red'}}></FaHeart>) : (<FaHeart></FaHeart>)}
+                            
+                            <span style={{marginLeft: '10px'}}>{comment.likecount}</span>
                             </div>
                         </RenderWithAuth>
                     </li>
-                    <li>
-                        <div>Username</div>
-                        <div>comment comment comment comment comment comment comment comment comment comment comment comment comment comment comment </div>
-                    </li>
+                    )): <li>Loading...</li>
+                    ) : (<li>A error occured.</li>)}
                 </ul>
             </div>
         </div>
@@ -209,10 +268,10 @@ export default function({auth, css, data, nextChapter} : ChapterTypes) {
             screenX = e.changedTouches[0].screenX
             screenY = e.changedTouches[0].screenY
         }
-        
+
         if(screenY - lastScreenY > 120 || screenY - lastScreenY < -120) return
         
-        if((screenX - lastScreenX) > window.innerWidth*0.45) {
+        if((screenX - lastScreenX) < window.innerWidth*0.35*-1) {
             if(nextChapter) {
                 Router.push('/book/[id]/chapter/[chapter]', `/book/${id}/chapter/${nextChapter['id']}`)
             } else {
@@ -220,6 +279,10 @@ export default function({auth, css, data, nextChapter} : ChapterTypes) {
             }
 
             window.scroll({top: 0, left: 0, behavior: 'smooth'})
+        }
+
+        if((screenX - lastScreenX) > window.innerWidth*0.35) {
+            Router.back()
         }
     }
 
