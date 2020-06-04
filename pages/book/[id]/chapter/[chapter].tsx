@@ -73,16 +73,20 @@ fetch('/api/getParagraphComments?paragraph_id='+p.id, {
                     },
                 }).then(r => {
                     if(r.status === 200) {
-                        setComments([{
-                            comment: commentValue,
-                            username: auth.user.username,
-                            likecount: 0,
-                            didilikeit: false
-                        },...comments])
+                        r.json().then(id => {
+                            setComments([{
+                                commentid: id.id,
+                                comment: commentValue,
+                                username: auth.user.username,
+                                likecount: 0,
+                                didilikeit: false
+                            },...comments])
+                            setCommentValue('')
+                            setPosting(false)
+                        })
+                    } else {
                         setCommentValue('')
                         setPosting(false)
-                    } else {
-                        console.log('fail')
                     }
                 })
             }
@@ -97,7 +101,9 @@ fetch('/api/getParagraphComments?paragraph_id='+p.id, {
                 'Content-Type': 'application/json',
             }
         }).then((r) => {
-            changeLikeState(id, state)
+            if(r.ok) {
+                changeLikeState(id, state)
+            }
         })
     }
 
@@ -124,7 +130,7 @@ fetch('/api/getParagraphComments?paragraph_id='+p.id, {
                 <ul>
                     {!err ? (
                     !!comments ? comments.map(comment => (
-                    <li>
+                    <li key={comment.commentid}>
                         <div>{comment.username}</div>
                         <div>{comment.comment}</div>
                         <div style={{textAlign: 'right'}}>

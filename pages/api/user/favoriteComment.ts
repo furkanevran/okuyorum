@@ -18,12 +18,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     
     try {
         const {comment_id} = req.body;
-        
         const likedBefore = await db.oneOrNone(
 `SELECT * FROM user_sentence_comment_likes
 WHERE user_id = $1 AND comment_id = $2`,
         [ me.id , comment_id ])
-        
+
 
         if(likedBefore) {
             throw new Error("User liked this before.")

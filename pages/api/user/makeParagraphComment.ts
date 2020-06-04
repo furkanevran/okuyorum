@@ -19,13 +19,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const {comment, paragraph_id} = req.body;
 
-        await db.books.makeParagraphComment({
+        const id = await db.books.makeParagraphComment({
             comment: comment,
             user_id: me.id,
             paragraph_id: paragraph_id
         })
 
-        res.status(200).end()
+        res.status(200).json(id)
         return
     } catch (error) {
         console.log(error)

@@ -46,7 +46,8 @@ const Profile = ({auth, favoriteBooks, comments}) => {
         <style jsx>{`
             pre {
                 max-width: 100%;
-                white-space: normal !important;
+                white-space: pre-wrap;
+                word-break: break-all;
             }
             `}</style>
         </>

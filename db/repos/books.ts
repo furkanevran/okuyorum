@@ -46,7 +46,7 @@ export class BooksRepository {
     }
 
     async makeParagraphComment(values: {comment: string, paragraph_id: bigint, user_id: bigint}) {
-        return this.db.none(sql.insertParagraphComment, {
+        return this.db.one(sql.insertParagraphComment, {
             comment: values.comment,
             paragraph_id: values.paragraph_id,
             user_id: values.user_id

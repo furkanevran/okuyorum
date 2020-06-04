@@ -3,3 +3,4 @@
 */
 INSERT INTO sentence_comments(comment, sentence_id, user_id)
 VALUES(${comment}, ${paragraph_id}, ${user_id})
+RETURNING id
