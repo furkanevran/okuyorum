@@ -6,7 +6,7 @@ import User from '../../../../db/models/user';
 import Paragraph from '../../../../db/models/paragraph';
 import Link from "next/link";
 import { useState, useEffect, createRef } from 'react';
-import { FaTimes, FaHeart, FaThumbsUp } from 'react-icons/fa'
+import { FaTimes, FaHeart, FaThumbsUp, FaTrash } from 'react-icons/fa'
 import ReactHtmlParser from 'react-html-parser';
 import fetch from 'isomorphic-unfetch'
 import Router from 'next/router';
@@ -117,6 +117,20 @@ fetch('/api/getParagraphComments?paragraph_id='+p.id, {
         }))
     }
 
+    function deleteComment(id) {
+        fetch('/api/user/deleteComment', {
+            method: 'POST',
+            body: JSON.stringify({'comment_id': id}),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then((r) => {
+            if(r.ok) {
+                setComments(comments.filter(x => x.commentid !== id))
+            }
+        })
+    }
+
     return (
         <div className="modal" onClick={shouldIClose}>
         <div className="content">
@@ -135,7 +149,10 @@ fetch('/api/getParagraphComments?paragraph_id='+p.id, {
                         <div>{comment.comment}</div>
                         <div style={{textAlign: 'right'}}>
                         <RenderWithAuth>
+                                <>
+                                {comment.userid === auth.user.id ? (<FaTrash onClick={() => deleteComment(comment.commentid)} style={{marginRight: 20}}></FaTrash>) : null}
                                 {comment.didilikeit ? (<FaHeart onClick={() => likeComment(comment.commentid, false)} style={{color:'red'}}></FaHeart>) : (<FaHeart onClick={() => likeComment(comment.commentid, true)}></FaHeart>)}
+                                </>
                         </RenderWithAuth>
                         <RenderWithAuth invert>
                                <Link href='/login' as='login'><FaHeart style={{color:'#888'}}></FaHeart></Link>
