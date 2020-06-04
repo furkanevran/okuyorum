@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,11 +54,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
-var pgPromise = require("pg-promise");
-var path = require("path");
-var fs = require("fs");
-var AdmZip = require("adm-zip");
+var pg_promise_1 = __importDefault(require("pg-promise"));
+var path = __importStar(require("path"));
+var fs = __importStar(require("fs"));
+var adm_zip_1 = __importDefault(require("adm-zip"));
 //#endregion 
 //#region Extension Helpers
 var Cached = /** @class */ (function () {
@@ -198,10 +220,10 @@ var cn = {
     host: 'localhost',
     port: 5432
 };
-var pgp = pgPromise(options);
+var pgp = pg_promise_1["default"](options);
 var db = pgp(cn);
 //#endregion
-var directoryPath = path.join(__dirname, 'epub');
+var directoryPath = 'C:\\Users\\furka\\Downloads\\epubs\\Epub Kitaplarım\\'; /*path.join(__dirname, 'epub');*/
 var outputPath = path.join(__dirname, '/public/epubdata');
 var pReplaceId = '°id°';
 function GetXMLNodes(obj, node, flags) {
@@ -216,13 +238,16 @@ function main() {
                 case 0:
                     files = fs.readdirSync(directoryPath);
                     _loop_1 = function (index) {
-                        var file, zip_1, entries, title, creator, description, date, htmlPages, styles, images, genres, coverPage, coverImagePath, paragraphs, _loop_2, ei, i, i, book, coverImageName, i, chapter, j, element, author, i, genre, out_1;
+                        var file, zip_1, entries, title, creator, description, date, htmlPages, styles, images, genres, coverPage, coverImagePath, paragraphs, _loop_2, ei, i, i, book, coverImageName, i, chapter, j, element, author, i, genre, out_1, error_4;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
                                     file = files[index];
-                                    if (!file.endsWith('.epub')) return [3 /*break*/, 24];
-                                    zip_1 = new AdmZip(directoryPath + '/' + file);
+                                    _a.label = 1;
+                                case 1:
+                                    _a.trys.push([1, 26, , 27]);
+                                    if (!file.endsWith('.epub')) return [3 /*break*/, 25];
+                                    zip_1 = new adm_zip_1["default"](directoryPath + '/' + file);
                                     entries = zip_1.getEntries();
                                     title = void 0;
                                     creator = void 0;
@@ -440,99 +465,104 @@ function main() {
                                     console.clear();
                                     console.log("Checking if book " + title + " exists");
                                     return [4 /*yield*/, db.findBook(title)];
-                                case 1:
+                                case 2:
                                     book = _a.sent();
-                                    if (!!book) return [3 /*break*/, 3];
+                                    if (!!book) return [3 /*break*/, 4];
                                     console.log("Book " + title + " doesn't exists, creating it.");
                                     coverImageName = coverImagePath.substring(coverImagePath.lastIndexOf('/') + 1);
                                     return [4 /*yield*/, db.insertBook(title, description, coverImageName, date)];
-                                case 2:
+                                case 3:
                                     book = _a.sent();
                                     console.log("Created book, " + JSON.stringify(book));
-                                    return [3 /*break*/, 4];
-                                case 3:
+                                    return [3 /*break*/, 5];
+                                case 4:
                                     console.log("Book already exists " + JSON.stringify(book) + ", skipping.");
                                     return [2 /*return*/, "continue"];
-                                case 4:
+                                case 5:
                                     console.log('Inserting chapters and contents...');
                                     i = 0;
-                                    _a.label = 5;
-                                case 5:
-                                    if (!(i < paragraphs.length)) return [3 /*break*/, 12];
-                                    return [4 /*yield*/, db.insertChapter(book.id, (i + 1).toString())];
+                                    _a.label = 6;
                                 case 6:
+                                    if (!(i < paragraphs.length)) return [3 /*break*/, 13];
+                                    return [4 /*yield*/, db.insertChapter(book.id, (i + 1).toString())];
+                                case 7:
                                     chapter = _a.sent();
                                     console.log("Created chapter " + (i + 1));
                                     j = 0;
-                                    _a.label = 7;
-                                case 7:
-                                    if (!(j < paragraphs[i].length)) return [3 /*break*/, 10];
-                                    element = paragraphs[i][j];
-                                    if (!!element.spacer) return [3 /*break*/, 9];
-                                    return [4 /*yield*/, db.insertText(chapter.id, element.text.replace(pReplaceId, book.id))];
+                                    _a.label = 8;
                                 case 8:
-                                    _a.sent();
-                                    _a.label = 9;
+                                    if (!(j < paragraphs[i].length)) return [3 /*break*/, 11];
+                                    element = paragraphs[i][j];
+                                    if (!!element.spacer) return [3 /*break*/, 10];
+                                    return [4 /*yield*/, db.insertText(chapter.id, element.text.replace(pReplaceId, book.id))];
                                 case 9:
-                                    j++;
-                                    return [3 /*break*/, 7];
+                                    _a.sent();
+                                    _a.label = 10;
                                 case 10:
-                                    console.log("Inserted " + paragraphs[i].length + " paragraphs on chapter");
-                                    _a.label = 11;
+                                    j++;
+                                    return [3 /*break*/, 8];
                                 case 11:
-                                    i++;
-                                    return [3 /*break*/, 5];
+                                    console.log("Inserted " + paragraphs[i].length + " paragraphs on chapter");
+                                    _a.label = 12;
                                 case 12:
+                                    i++;
+                                    return [3 /*break*/, 6];
+                                case 13:
                                     console.log("Checking if author " + creator + " exists");
                                     return [4 /*yield*/, db.findAuthor(creator)];
-                                case 13:
-                                    author = _a.sent();
-                                    if (!!author) return [3 /*break*/, 15];
-                                    console.log("Book " + creator + " doesn't exists, creating it.");
-                                    return [4 /*yield*/, db.insertAuthor(creator)];
                                 case 14:
                                     author = _a.sent();
-                                    _a.label = 15;
+                                    if (!!author) return [3 /*break*/, 16];
+                                    console.log("Book " + creator + " doesn't exists, creating it.");
+                                    return [4 /*yield*/, db.insertAuthor(creator)];
                                 case 15:
+                                    author = _a.sent();
+                                    _a.label = 16;
+                                case 16:
                                     console.log("Connecting " + creator + " with " + title);
                                     return [4 /*yield*/, db.connectBookToAuthor(book.id, author.id)];
-                                case 16:
+                                case 17:
                                     _a.sent();
                                     console.log("Connected!");
                                     i = 0;
-                                    _a.label = 17;
-                                case 17:
-                                    if (!(i < genres.length)) return [3 /*break*/, 23];
-                                    return [4 /*yield*/, db.findGenre(genres[i])];
+                                    _a.label = 18;
                                 case 18:
-                                    genre = _a.sent();
-                                    console.log("Checking if genre " + genres[i] + " exists");
-                                    if (!!genre) return [3 /*break*/, 20];
-                                    console.log("Genre " + genres[i] + " doesn't exists, creating it.");
-                                    return [4 /*yield*/, db.insertGenre(genres[i])];
+                                    if (!(i < genres.length)) return [3 /*break*/, 24];
+                                    return [4 /*yield*/, db.findGenre(genres[i])];
                                 case 19:
                                     genre = _a.sent();
-                                    console.log("Created genre " + JSON.stringify(genre));
-                                    _a.label = 20;
+                                    console.log("Checking if genre " + genres[i] + " exists");
+                                    if (!!genre) return [3 /*break*/, 21];
+                                    console.log("Genre " + genres[i] + " doesn't exists, creating it.");
+                                    return [4 /*yield*/, db.insertGenre(genres[i])];
                                 case 20:
+                                    genre = _a.sent();
+                                    console.log("Created genre " + JSON.stringify(genre));
+                                    _a.label = 21;
+                                case 21:
                                     console.log("Connecting " + genre.genre + " with " + book.name);
                                     return [4 /*yield*/, db.connectBookToGenre(book.id, genre.id)];
-                                case 21:
+                                case 22:
                                     _a.sent();
                                     console.log("Connected!");
-                                    _a.label = 22;
-                                case 22:
-                                    i++;
-                                    return [3 /*break*/, 17];
+                                    _a.label = 23;
                                 case 23:
+                                    i++;
+                                    return [3 /*break*/, 18];
+                                case 24:
                                     out_1 = outputPath + "\\" + book.id;
                                     console.log("Extracting style and image files to " + out_1);
                                     styles.forEach(function (x) { zip_1.extractEntryTo(x, out_1, false, true); });
                                     images.forEach(function (x) { zip_1.extractEntryTo(x, out_1, false, true); });
                                     zip_1.extractEntryTo(coverImagePath, out_1, false, true);
                                     console.log('Done!');
-                                    _a.label = 24;
-                                case 24: return [2 /*return*/];
+                                    _a.label = 25;
+                                case 25: return [3 /*break*/, 27];
+                                case 26:
+                                    error_4 = _a.sent();
+                                    console.log('ERROR ON FILE' + file);
+                                    return [3 /*break*/, 27];
+                                case 27: return [2 /*return*/];
                             }
                         });
                     };

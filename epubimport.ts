@@ -1,7 +1,7 @@
 import pgPromise from 'pg-promise';
 import * as path from 'path';
 import * as fs from 'fs';
-import * as AdmZip from 'adm-zip'
+import AdmZip from 'adm-zip'
 
 //#region Extensions
 interface IExtensions {
@@ -121,7 +121,7 @@ const db = pgp(cn);
 //#endregion
 
 
-const directoryPath = path.join(__dirname, 'epub');
+const directoryPath = 'C:\\Users\\furka\\Downloads\\epubs\\Epub Kitaplarım\\'/*path.join(__dirname, 'epub');*/
 const outputPath = path.join(__dirname, '/public/epubdata');
 const pReplaceId = '°id°'
 
@@ -134,7 +134,7 @@ async function main() {
     const files:string[] = fs.readdirSync(directoryPath);
     for (let index = 0; index < files.length; index++) {
         const file = files[index];
-
+try {
         if (file.endsWith('.epub')) {
             const zip:any = new AdmZip(directoryPath+'/'+file);
             const entries:[any] = zip.getEntries();
@@ -429,6 +429,9 @@ async function main() {
 
             console.log('Done!')
         }
+    } catch (error) {
+    console.log('ERROR ON FILE' + file)
+    }
     }
 }
 

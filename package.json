@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "epub": "node epubimport.js"
+    "build-epub": "tsc --esModuleInterop true epubimport.ts",
+    "import-epubs": "node epubimport.js"
   },
   "dependencies": {
     "adm-zip": "^0.4.14",
