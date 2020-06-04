@@ -89,6 +89,28 @@ fetch('/api/getParagraphComments?paragraph_id='+p.id, {
         }
     }
 
+    function likeComment(id, state) {
+        fetch('/api/user/' + (state ? 'favoriteComment' : 'removeFavoriteComment'), {
+            method: 'POST',
+            body: JSON.stringify({'comment_id': id}),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then((r) => {
+            changeLikeState(id, state)
+        })
+    }
+
+    function changeLikeState(id, state) {
+        setComments(comments.map(x => {
+            if(x.commentid === id) {
+                return {...x, didilikeit: state, likecount: state ? +x.likecount + 1 : +x.likecount - 1}
+            }
+
+            return x
+        }))
+    }
+
     return (
         <div className="modal" onClick={shouldIClose}>
         <div className="content">
@@ -107,7 +129,7 @@ fetch('/api/getParagraphComments?paragraph_id='+p.id, {
                         <div>{comment.comment}</div>
                         <div style={{textAlign: 'right'}}>
                         <RenderWithAuth>
-                                {comment.didilikeit ? (<FaHeart style={{color:'red'}}></FaHeart>) : (<FaHeart></FaHeart>)}
+                                {comment.didilikeit ? (<FaHeart onClick={() => likeComment(comment.commentid, false)} style={{color:'red'}}></FaHeart>) : (<FaHeart onClick={() => likeComment(comment.commentid, true)}></FaHeart>)}
                         </RenderWithAuth>
                         <RenderWithAuth invert>
                                <Link href='/login' as='login'><FaHeart style={{color:'#888'}}></FaHeart></Link>
