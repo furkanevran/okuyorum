@@ -32,7 +32,7 @@ const Profile = ({auth, favoriteBooks, comments}) => {
         <Collapse>
         <div>
             {comments && comments.map(x => (
-                <pre key={x.commentid} style={{marginTop: 20, borderLeft: '3px solid #fff', paddingLeft: 15}}>
+                <pre key={x.commentid} style={{marginTop: 40, borderLeft: '3px solid #fff', paddingLeft: 15}}>
                     <Link href='/book/[id]' as={`/book/${x.bookid}`}><a>{x.bookname}</a></Link>
                     <Link href='/book/[id]/chapter/[chapter]' as={`/book/${x.bookid}/chapter/${x.chapterid}`}><a style={{marginLeft: 15}}>{x.chaptername+'. Bölüm'}</a></Link>
                     <div>{ReactHtmlParser(decodeHtml(x.text))}</div>
