@@ -61,4 +61,4 @@ komutunu çalıştırabilirsiniz.
 ***
 SPA olarak ilk projem olduğundan bir sürü hata olduğuna ve mantıksız yollar tercih ettiğimi düşünüyorum.
 ***
-Lisans: [MIT]([https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT))
+Lisans: [MIT](https://opensource.org/licenses/MIT)
