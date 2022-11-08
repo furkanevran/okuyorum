@@ -18,7 +18,7 @@
     "global": "^4.4.0",
     "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
-    "next": "9.4.2",
+    "next": "13.0.2",
     "nprogress": "^0.2.0",
     "pg-monitor": "^1.4.0",
     "pg-promise": "^10.5.6",
